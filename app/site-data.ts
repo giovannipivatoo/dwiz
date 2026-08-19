@@ -1,43 +1,77 @@
-export const placements = [
+export type WorkEntry = {
+  readonly slug: string;
+  readonly legacySlug: string;
+  readonly index: string;
+  readonly title: string;
+  readonly outlet: string;
+  readonly videoId: string;
+  readonly youtubeUrl: string;
+  readonly credit: "Music contribution";
+  readonly summary: string;
+  readonly beatTitle?: string;
+  readonly timecode?: string;
+  readonly publishedAt?: string;
+  readonly coAuthors?: readonly string[];
+  readonly masterOwner?: string;
+  readonly publishingOwner?: string;
+};
+
+export const siteConfig = {
+  name: "DWIZ",
+  fullName: "Davide Zonta",
+  url: "https://sync-composer-concept.giovannipivatoo.chatgpt.site",
+  email: null as string | null,
+  socials: [] as readonly { readonly label: string; readonly href: string }[],
+};
+
+export const socialImage = {
+  url: "/og.png",
+  width: 1200,
+  height: 630,
+  alt: "DWIZ — Music for the moment before impact.",
+};
+
+export const publishedWork: readonly WorkEntry[] = [
   {
-    slug: "placement-one",
+    slug: "a-casa-di-nerissima-serpe",
+    legacySlug: "placement-one",
     index: "01",
-    title: "Placement 001",
-    category: "SPORT / ACTION",
-    year: "2026",
+    title: "A casa di Nerissima Serpe",
+    outlet: "esse Magazine",
     videoId: "aTEkgtKLw5c",
-    description:
-      "A high-energy placement driven by heavyweight drums, controlled low-end and a fast visual pulse.",
-    palette: ["808 PRESSURE", "TACTICAL DRUMS", "MOMENTUM"],
+    youtubeUrl: "https://www.youtube.com/watch?v=aTEkgtKLw5c",
+    credit: "Music contribution",
+    summary:
+      "A published esse Magazine video featuring Nerissima Serpe, with a music contribution by DWIZ.",
   },
   {
-    slug: "placement-two",
+    slug: "super-9000-65-lanta",
+    legacySlug: "placement-two",
     index: "02",
-    title: "Placement 002",
-    category: "CRIME / TENSION",
-    year: "2026",
+    title: "Super 9000 || The Sound of Hip-Hop with 65 Lanta",
+    outlet: "Solid State Logic",
     videoId: "-Zmfm-GoCf8",
-    description:
-      "A darker sync built around restraint, negative space and a rising sense of consequence.",
-    palette: ["LOW BURN", "DARK TEXTURE", "IMPACT"],
+    youtubeUrl: "https://www.youtube.com/watch?v=-Zmfm-GoCf8",
+    credit: "Music contribution",
+    summary:
+      "A published Solid State Logic video featuring 65 Lanta, with a music contribution by DWIZ.",
   },
 ] as const;
 
-export const soundProfile = [
+export const directionRows = [
   {
     number: "01",
-    name: "ATHLETIC PRESSURE",
-    detail: "Forward drums / decisive drops / competitive energy",
+    name: "FOUNDATION",
+    detail: "Rap and trap beatmaking",
   },
   {
     number: "02",
-    name: "URBAN TENSION",
-    detail: "Sparse 808s / distorted texture / controlled unease",
+    name: "CURRENT MOVE",
+    detail: "Original music shaped for picture",
   },
   {
     number: "03",
-    name: "DARK MOMENTUM",
-    detail: "Hybrid rhythm / escalating stakes / cinematic scale",
+    name: "FUTURE FOCUS",
+    detail: "Sport · action · crime · tension",
   },
 ] as const;
-

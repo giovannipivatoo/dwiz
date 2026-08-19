@@ -1,65 +1,47 @@
 import Link from "next/link";
 import { Shell } from "../components";
-
-type Placement = {
-  readonly slug: string;
-  readonly index: string;
-  readonly title: string;
-  readonly category: string;
-  readonly year: string;
-  readonly videoId: string;
-  readonly description: string;
-  readonly palette: readonly string[];
-};
+import type { WorkEntry } from "../site-data";
+import { YouTubeVideo } from "../youtube-video";
 
 export function ProjectPage({
-  placement,
+  entry,
   next,
 }: {
-  placement: Placement;
-  next: Placement;
+  entry: WorkEntry;
+  next: WorkEntry;
 }) {
   return (
     <Shell>
-      <main className="project-page">
-        <section className="project-head page-pad">
-          <p className="eyebrow">SYNC CASE STUDY / {placement.index}</p>
-          <h1>{placement.title}</h1>
+      <main id="main-content" tabIndex={-1} className="project-page">
+        <section className="project-head page-pad" aria-labelledby="project-title">
+          <p className="eyebrow">PUBLISHED WORK / {entry.index}</p>
+          <h1 id="project-title">{entry.title}</h1>
           <div className="project-meta-grid">
-            <div><span>WORLD</span><strong>{placement.category}</strong></div>
-            <div><span>ROLE</span><strong>PRODUCER / COMPOSER</strong></div>
-            <div><span>YEAR</span><strong>{placement.year}</strong></div>
+            <div><span>OUTLET</span><strong>{entry.outlet}</strong></div>
+            <div><span>CREDIT</span><strong>{entry.credit}</strong></div>
+            <div><span>STATUS</span><strong>PUBLISHED VIDEO</strong></div>
           </div>
         </section>
-        <section className="project-video page-pad">
-          <div className="video-frame">
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${placement.videoId}?rel=0`}
-              title={`${placement.title} video`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
+        <section className="project-video page-pad" aria-label={`${entry.title} video`}>
+          <YouTubeVideo
+            videoId={entry.videoId}
+            title={entry.title}
+            outlet={entry.outlet}
+            youtubeUrl={entry.youtubeUrl}
+          />
         </section>
-        <section className="project-story page-pad">
-          <p className="eyebrow">THE SIGNAL</p>
+        <section className="project-story page-pad" aria-labelledby="credit-title">
+          <p className="eyebrow">CREDIT</p>
           <div>
-            <p className="large-copy">{placement.description}</p>
-            <div className="tag-row large-tags">
-              {placement.palette.map((tag) => <i key={tag}>{tag}</i>)}
-            </div>
+            <h2 id="credit-title" className="visually-hidden">Project credit</h2>
+            <p className="large-copy">{entry.summary}</p>
           </div>
-          <p className="project-note">
-            Final credits, client, brief and production notes to be confirmed
-            before launch.
-          </p>
         </section>
         <Link className="next-project page-pad" href={`/work/${next.slug}`}>
-          <span>NEXT CASE STUDY</span>
-          <strong>{next.title} ↗</strong>
+          <span>NEXT PROJECT</span>
+          <strong>{next.title} <span aria-hidden="true">↗</span></strong>
         </Link>
       </main>
     </Shell>
   );
 }
-

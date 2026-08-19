@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
+import { siteConfig, socialImage } from "./site-data";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,18 +14,44 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Artist Name — Sync Composer & Producer",
-  description:
-    "Music for sport, action, crime and tension. A concept portfolio for a sync composer with beatmaker DNA.",
-  other: {
-    "codex-preview": "development",
-  },
-  icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const requestHeaders = await headers();
+  const forwardedHost = requestHeaders
+    .get("x-forwarded-host")
+    ?.split(",")[0]
+    ?.trim();
+  const host = forwardedHost ?? requestHeaders.get("host");
+  const forwardedProtocol = requestHeaders
+    .get("x-forwarded-proto")
+    ?.split(",")[0]
+    ?.trim();
+  const protocol =
+    forwardedProtocol ?? (host?.startsWith("localhost") ? "http" : "https");
+  const metadataBase = host
+    ? new URL(`${protocol}://${host}`)
+    : new URL(siteConfig.url);
+
+  return {
+    metadataBase,
+    applicationName: siteConfig.name,
+    title: {
+      default: "DWIZ — Producer & Music for Picture",
+      template: "%s | DWIZ",
+    },
+    description:
+      "Official portfolio of DWIZ, Davide Zonta: a producer with roots in rap and trap beatmaking, developing original music for picture.",
+    openGraph: {
+      siteName: siteConfig.name,
+      locale: "en_US",
+      type: "website",
+      images: [socialImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: ["/og.png"],
+    },
+  };
+}
 
 export default function RootLayout({
   children,
@@ -32,9 +60,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>
     </html>

@@ -1,41 +1,72 @@
+import type { Metadata } from "next";
 import { Shell } from "../components";
+import { socialImage } from "../site-data";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "About DWIZ, Davide Zonta: a producer moving from rap and trap beatmaking into original music for picture.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About | DWIZ",
+    description:
+      "Davide Zonta is the producer behind DWIZ, moving from rap and trap beatmaking into music for picture.",
+    url: "/about",
+    images: [socialImage],
+  },
+};
+
+const trajectory = [
+  {
+    number: "01",
+    title: "FOUNDATION",
+    copy: "A production language developed through rap and trap beatmaking.",
+  },
+  {
+    number: "02",
+    title: "NOW",
+    copy: "Building original music around edit, movement and the needs of picture.",
+  },
+  {
+    number: "03",
+    title: "DIRECTION",
+    copy: "Developing toward sport, action, crime, tension and thriller work.",
+  },
+] as const;
 
 export default function AboutPage() {
   return (
     <Shell>
-      <main className="inner-page page-pad">
-        <section className="about-hero">
-          <div className="about-photo">
-            <div className="photo-placeholder">
-              <span>SUPPLIED STUDIO PORTRAIT</span>
-              <b>A/01</b>
-            </div>
+      <main id="main-content" tabIndex={-1} className="inner-page page-pad">
+        <section className="about-hero" aria-labelledby="about-title">
+          <div className="identity-panel" aria-hidden="true">
+            <span>DWIZ</span>
+            <div className="identity-disc">808</div>
+            <small>DAVIDE ZONTA / PRODUCER</small>
           </div>
           <div className="about-copy">
-            <p className="eyebrow">ABOUT / THE PRODUCER</p>
-            <h1>BUILT IN<br />BEATS.<br /><em>READY FOR<br />PICTURE.</em></h1>
+            <p className="eyebrow">ABOUT / DAVIDE ZONTA</p>
+            <h1 id="about-title">BUILT IN<br />BEATS.<br /><em>MOVING INTO<br />PICTURE.</em></h1>
             <p className="large-copy">
-              ARTIST NAME is a producer and sync composer bringing the rhythm,
-              weight and negative space of modern hip-hop into sport, action,
-              crime and tension-driven visual work.
+              DWIZ is Davide Zonta, a producer whose foundation comes from rap
+              and trap beatmaking. He is developing that language for picture,
+              with a future focus on sport, action, crime, tension and thriller.
             </p>
           </div>
         </section>
-        <section className="process-grid">
-          <p className="eyebrow">PROCESS / 03 STEPS</p>
-          <div className="process-list">
-            <article><span>01</span><h2>READ THE CUT</h2><p>Find the pressure point, pace and emotional turn before adding sound.</p></article>
-            <article><span>02</span><h2>BUILD THE ENGINE</h2><p>Shape drums, 808s and texture around movement rather than genre convention.</p></article>
-            <article><span>03</span><h2>MAKE SPACE HIT</h2><p>Use contrast, silence and release so the sync supports edit and story.</p></article>
+        <section className="trajectory-grid" aria-labelledby="trajectory-title">
+          <p className="eyebrow" id="trajectory-title">TRAJECTORY</p>
+          <div className="trajectory-list">
+            {trajectory.map((item) => (
+              <article key={item.number}>
+                <span>{item.number}</span>
+                <h2>{item.title}</h2>
+                <p>{item.copy}</p>
+              </article>
+            ))}
           </div>
-        </section>
-        <section className="studio-strip">
-          <div><span>STUDIO FRAME / 01</span></div>
-          <div><span>STUDIO FRAME / 02</span></div>
-          <div><span>DETAIL / PROCESS</span></div>
         </section>
       </main>
     </Shell>
   );
 }
-

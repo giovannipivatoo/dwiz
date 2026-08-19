@@ -1,7 +1,6 @@
-import { ProjectPage } from "../project-page";
-import { placements } from "../../site-data";
+import { redirect } from "next/navigation";
 
-export default function PlacementTwoPage() {
-  return <ProjectPage placement={placements[1]} next={placements[0]} />;
+export default function LegacyPlacementTwoPage() {
+  redirect("/work/super-9000-65-lanta");
 }
 

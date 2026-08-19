@@ -1,20 +1,13 @@
 import Link from "next/link";
-
-export function ReviewBar() {
-  return (
-    <div className="review-bar">
-      <span>CONCEPT PROTOTYPE / CONTENT TO BE REPLACED</span>
-      <Link href="/wireframes">VIEW WIREFRAMES ↗</Link>
-    </div>
-  );
-}
+import type { WorkEntry } from "./site-data";
 
 export function Header() {
   return (
     <header className="site-header">
-      <Link className="wordmark" href="/" aria-label="Artist Name home">
-        <span className="wordmark-mark">A/01</span>
-        <span>ARTIST NAME</span>
+      <Link className="wordmark" href="/" aria-label="DWIZ home">
+        <span className="wordmark-mark" aria-hidden="true">DW</span>
+        <span>DWIZ</span>
+        <span className="wordmark-name">DAVIDE ZONTA</span>
       </Link>
       <nav aria-label="Primary navigation">
         <Link href="/work">WORK</Link>
@@ -24,19 +17,18 @@ export function Header() {
     </header>
   );
 }
-
 export function Footer() {
   return (
     <footer className="site-footer">
       <div>
-        <p className="eyebrow">AVAILABLE FOR SELECTED PROJECTS</p>
+        <p className="eyebrow">MUSIC SHARED PRIVATELY ON REQUEST</p>
         <Link className="footer-cta" href="/contact">
-          LET&apos;S MAKE IT HIT <span>↗</span>
+          REQUEST MUSIC <span aria-hidden="true">↗</span>
         </Link>
       </div>
       <div className="footer-meta">
-        <span>SYNC COMPOSER / PRODUCER</span>
-        <span>SPORT · ACTION · CRIME · TENSION</span>
+        <span>DWIZ / DAVIDE ZONTA</span>
+        <span>PRODUCER · MUSIC FOR PICTURE</span>
         <span>© 2026</span>
       </div>
     </footer>
@@ -46,7 +38,7 @@ export function Footer() {
 export function Shell({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <ReviewBar />
+      <a className="skip-link" href="#main-content">SKIP TO CONTENT</a>
       <Header />
       {children}
       <Footer />
@@ -55,25 +47,24 @@ export function Shell({ children }: { children: React.ReactNode }) {
 }
 
 export function VideoPoster({
-  videoId,
+  entry,
   label,
   compact = false,
 }: {
-  videoId: string;
+  entry: WorkEntry;
   label: string;
   compact?: boolean;
 }) {
   return (
-    <div className={`video-poster ${compact ? "video-poster-compact" : ""}`}>
-      <img
-        src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
-        alt=""
-      />
-      <div className="poster-scrim" />
-      <span className="poster-index">SYNC / SELECTED WORK</span>
-      <span className="play-disc" aria-hidden="true">
-        ▶
-      </span>
+    <div
+      className={`video-poster ${compact ? "video-poster-compact" : ""}`}
+      aria-hidden="true"
+    >
+      <div className="poster-grid" />
+      <div className="poster-orbit" />
+      <span className="poster-index">PUBLISHED WORK / {entry.index}</span>
+      <strong className="poster-title">{entry.outlet}</strong>
+      <span className="play-disc">▶</span>
       <span className="poster-label">{label}</span>
     </div>
   );

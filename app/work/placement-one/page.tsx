@@ -1,7 +1,6 @@
-import { ProjectPage } from "../project-page";
-import { placements } from "../../site-data";
+import { redirect } from "next/navigation";
 
-export default function PlacementOnePage() {
-  return <ProjectPage placement={placements[0]} next={placements[1]} />;
+export default function LegacyPlacementOnePage() {
+  redirect("/work/a-casa-di-nerissima-serpe");
 }
 

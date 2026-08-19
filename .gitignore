@@ -1,0 +1,22 @@
+# dependencies
+/node_modules
+
+# build output
+/.next/
+/.vinext/
+/dist/
+/out/
+/coverage/
+
+# local tooling
+/.sites-runtime/
+/.wrangler/
+/outputs/
+
+# environment and logs
+.env*
+*.log
+
+# operating system
+.DS_Store
+
