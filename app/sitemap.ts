@@ -7,7 +7,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
   const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
   const baseUrl = host ? `${protocol}://${host}` : siteConfig.url;
-  const staticRoutes = ["", "/work", "/about", "/contact"];
+  const staticRoutes = ["", "/work", "/work/production", "/about", "/contact"];
   const workRoutes = publishedWork.map((entry) => `/work/${entry.slug}`);
 
   return [...staticRoutes, ...workRoutes].map((path) => ({

@@ -1,108 +1,80 @@
-# vinext-starter
+# DWIZ — Davide Zonta
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+Portfolio for DWIZ: music for picture and released records featuring his co-production. Built with React 19, Vinext/Vite and the Next.js App Router, targeting OpenAI Sites on Cloudflare Workers.
 
-## Prerequisites
+Read [AGENTS.md](AGENTS.md) for the approved design direction, content decisions and constraints before changing the site.
 
-- Node.js `>=22.13.0`
-- Linux with `flock`, `curl`, and GNU `timeout`
+## Current design
 
-## Sites Lifecycle
+**01 Cinema** is the selected direction. Work is divided into **Sync** and **Production**. The two existing Sync projects are preserved; Production contains the seven releases selected by the artist, in his order, all credited **Co-production**.
 
-The Sites lifecycle CLI runs the locked dependency install before returning this checkout. Edit the source under `app/`, then checkpoint when a coherent milestone is ready to inspect or share. The remote Sites builder runs `npm run build` against the pushed commit. Do not repeat install or build as a normal pre-checkpoint step.
+Three Production layouts remain available for review; none has been selected as final yet:
 
-This starter does not use `wrangler.jsonc`.
+| Layout | Preview path | Composition |
+| --- | --- | --- |
+| 01 Sleeves | `/work/production?layout=sleeves` | Cover-led grid: three larger records followed by four smaller records on desktop |
+| 02 Index | `/work/production?layout=index` | Discography list with an artwork preview that follows hover and keyboard focus; row thumbnails on mobile |
+| 03 Spotlight | `/work/production?layout=spotlight` | Featured record, previous/next controls and a selector for all seven releases |
 
-`install:ci` is intentionally a single, non-retrying `npm ci`. It refuses a concurrent install for the same project, consumes a matching image-seeded npm cache with `--prefer-offline` while retaining registry fallback for a missing cache object, otherwise downloads and verifies the complete vinext tarball recorded in `package-lock.json`, limits npm to one socket, and terminates a stalled install. `build` applies a short timeout and then validates the Sites artifact. These helpers target Linux and use GNU `timeout`; they are not native macOS scripts.
+The Sync/Production category links retain the Production layout choice. Missing or unknown layout values use Sleeves. Earlier site-wide concepts remain accessible through `?v=editorial` and `?v=studio`; Cinema is the default. Production always uses Cinema.
 
-Scripts that need writable project-scoped home, npm, XDG, and temporary paths use `scripts/sites-env.sh`. The `dev` and `start` scripts honor the caller's runtime environment and keep Wrangler logs inside the checkout. The generated `.sites-runtime/` directory is disposable and ignored by Git.
+## Local development
 
-## Included Shape
+Requires Node.js **22.13.0 or newer** and npm. On a fresh checkout:
 
-- edit site code under `app/`
-- `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
-
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```sh
+npm ci
+npm run dev -- --host 127.0.0.1 --port 5174
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+Open `http://127.0.0.1:5174`. Use another free port if needed.
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+```sh
+npm test
+npx --no-install eslint app tests
+```
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+`npm test` builds the Worker, validates the Sites artifact, then runs the rendered-HTML integration tests. `npm run build` uses the portable Node-based `scripts/build-verified.mjs`; it was verified on macOS. The separate `npm run install:ci` helper targets Linux and requires `flock`, `curl` and GNU `timeout`.
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+Other commands:
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+- `npm run start`: serve the built application.
+- `npm run validate:artifact`: validate an existing Worker and packaged hosting manifest.
+- `npm run lint`: lint the checkout through the project runtime helper.
+- `npm run db:generate`: generate Drizzle migrations if database features are added.
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+## Source map
 
-## Diagnostic Commands
+| File or directory | Responsibility |
+| --- | --- |
+| `app/site-data.ts` | Identity, Sync project content, contact configuration, social image |
+| `app/variants.ts` | Original site-wide design variants and URL helpers |
+| `app/components.tsx` | Shared navigation, footer and Sync project cards |
+| `app/cinema-hero.tsx` | Homepage project selection |
+| `app/work/work-navigation.tsx` | Sync/Production navigation and Production layout selector |
+| `app/work/production/releases.ts` | Authoritative release order, credits, artwork paths and listening links |
+| `app/work/production/production-catalog.tsx` | All three Production layouts and interactions |
+| `app/work/project-page.tsx`, `app/youtube-video.tsx` | Shared Sync project page and click-to-load video |
+| `app/globals.css` | Shared styling, design variants and responsive layouts |
+| `public/work/`, `public/production/` | Local official project stills and release artwork |
+| `public/fonts/` | Anton font and its OFL license, used by the Editorial concept |
+| `tests/rendered-html.test.mjs` | Public routes, content, variants, metadata, video loading and legacy redirects |
 
-- `npm run install:ci`: perform the one bounded lockfile install
-- `npm run dev`: start the Vite/Vinext development server
-- `npm run build`: build and validate the deployable Sites artifact
-- `npm run start`: start the built Vinext application
-- `npm test`: build, validate, and verify the rendered development-preview metadata
-- `npm run validate:artifact`: recheck an existing artifact's manifest and ESM `default.fetch` export
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+## Hosting and optional integrations
 
-Use build and validation commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
+`.openai/hosting.json` associates this checkout with its Sites project. D1 and R2 bindings are currently disabled. The build emits the ESM Worker at `dist/server/index.js` and the packaged hosting manifest at `dist/.openai/hosting.json`. There is no `wrangler.jsonc`.
 
-The timeout defaults can be overridden for a controlled canary with `SITES_INSTALL_TIMEOUT`, `SITES_INSTALL_KILL_AFTER`, `SITES_BUILD_TIMEOUT`, and `SITES_BUILD_KILL_AFTER`. A timeout fails the command; the helpers never retry an unchanged install or build.
+Git commits and pushes are separate from Sites publication. The Cinema redesign and Production variants were reviewed locally; their publication was not performed during this design pass.
 
-## Learn More
+The starter retains optional D1/Drizzle examples and `app/chatgpt-auth.ts` helpers. The portfolio currently has no database-backed content or sign-in flow. If sign-in is introduced, use the existing helpers and platform access controls; Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt` and `/callback`.
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+Dependencies, builds, runtime state, environment files and logs are ignored by Git. Browser QA used a temporary Playwright installation outside the repository; Playwright is not a project dependency.
+
+## Latest validation — 8 September 2026
+
+- Build, Sites artifact validation and all **8 integration tests** passed.
+- ESLint passed for `app` and `tests`.
+- Browser checks passed at 320, 390, 768 and 1440 px: category navigation, artwork loading, Index keyboard preview, Spotlight selection and previous/next wraparound.
+- Final checks confirmed seven uniform Co-production credits, no loop distinction, no horizontal overflow and no browser JavaScript errors.
+
+Standalone `tsc --noEmit` still encounters the starter's missing Cloudflare worker type declarations (`cloudflare:workers`, `Fetcher`, `D1Database`); this is separate from the successful build and integration tests.

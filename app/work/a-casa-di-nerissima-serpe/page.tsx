@@ -1,3 +1,4 @@
+import { getDirection, type PageProps } from "../../variants";
 import type { Metadata } from "next";
 import { publishedWork, socialImage } from "../../site-data";
 import { ProjectPage } from "../project-page";
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function EsseProjectPage() {
-  return <ProjectPage entry={entry} next={publishedWork[1]} />;
+export default async function EsseProjectPage({ searchParams }: PageProps) {
+  const direction = await getDirection(searchParams);
+  return <ProjectPage direction={direction} entry={entry} next={publishedWork[1]} />;
 }

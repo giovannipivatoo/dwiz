@@ -6,6 +6,8 @@ export type WorkEntry = {
   readonly outlet: string;
   readonly videoId: string;
   readonly youtubeUrl: string;
+  readonly poster: string;
+  readonly still: string;
   readonly credit: "Music contribution";
   readonly summary: string;
   readonly beatTitle?: string;
@@ -40,6 +42,8 @@ export const publishedWork: readonly WorkEntry[] = [
     outlet: "esse Magazine",
     videoId: "aTEkgtKLw5c",
     youtubeUrl: "https://www.youtube.com/watch?v=aTEkgtKLw5c",
+    poster: "/work/nerissima-serpe.jpg",
+    still: "/work/nerissima-serpe-still.jpg",
     credit: "Music contribution",
     summary:
       "A published esse Magazine video featuring Nerissima Serpe, with a music contribution by DWIZ.",
@@ -52,6 +56,8 @@ export const publishedWork: readonly WorkEntry[] = [
     outlet: "Solid State Logic",
     videoId: "-Zmfm-GoCf8",
     youtubeUrl: "https://www.youtube.com/watch?v=-Zmfm-GoCf8",
+    poster: "/work/65-lanta.jpg",
+    still: "/work/65-lanta-still.jpg",
     credit: "Music contribution",
     summary:
       "A published Solid State Logic video featuring 65 Lanta, with a music contribution by DWIZ.",

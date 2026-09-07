@@ -35,6 +35,7 @@ test("renders every public HTML route", async () => {
   const routes = [
     "/",
     "/work",
+    "/work/production",
     "/about",
     "/contact",
     "/work/a-casa-di-nerissima-serpe",
@@ -58,12 +59,47 @@ test("renders verified identity and credit copy without prototype content", asyn
   assert.doesNotMatch(`${home}${work}`, /ARTIST NAME|Placement 00|codex-preview|CONCEPT PROTOTYPE/i);
 });
 
+test("keeps the selected design throughout every page and defaults unknown designs", async () => {
+  const routes = ["/", "/work", "/about", "/contact", "/work/a-casa-di-nerissima-serpe", "/work/super-9000-65-lanta"];
+  for (const direction of ["cinema", "editorial", "studio"]) {
+    for (const route of routes) {
+      const response = await get(route + "?v=" + direction);
+      assert.equal(response.status, 200, route + " " + direction);
+      const html = await response.text();
+      assert.ok(html.includes("direction-" + direction));
+      assert.ok(html.includes('href="/work?v=' + direction + '"'));
+      assert.ok(html.includes('href="/about?v=' + direction + '"'));
+      assert.ok(html.includes('href="/contact?v=' + direction + '"'));
+    }
+  }
+  const fallback = await (await get("/?v=unknown")).text();
+  assert.ok(fallback.includes("direction-cinema"));
+});
+
 test("renders the site-specific social preview metadata", async () => {
   const home = await (await get("/")).text();
 
   assert.match(home, /summary_large_image/);
   assert.match(home, /http:\/\/localhost\/og\.png/);
   assert.match(home, /DWIZ — Music for the moment before impact\./);
+});
+
+test("offers the artist-selected releases in all three Production layouts", async () => {
+  for (const layout of ["sleeves", "index", "spotlight"]) {
+    const response = await get("/work/production?layout=" + layout);
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    for (const title of ["Despedida", "ADDERALL", "LAST KRY", "Medicine &amp; Fentanyl", "Aw Yeah", "+TRAP", "Don’t Panic"]) {
+      assert.ok(html.includes(title), title + " in " + layout);
+    }
+    assert.match(html, /7<!-- --> selected releases/);
+    assert.ok(html.includes('href="/work?layout=' + layout + '"'));
+    assert.ok(html.includes("5wjfeD4eDzX9QZUiGeKJBV"));
+    assert.ok(html.includes("B-f0SSfZKzs"));
+    assert.doesNotMatch(html, /TRAP KARTEL UNDERGROUND|40 MOTIVI|cuore bustdown|Top 10|most streamed/);
+  }
+  const fallback = await (await get("/work/production?layout=unknown")).text();
+  assert.ok(fallback.includes("production-page layout-sleeves"));
 });
 
 test("does not load the YouTube iframe before user interaction", async () => {
