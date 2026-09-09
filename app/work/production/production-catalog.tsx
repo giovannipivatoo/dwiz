@@ -1,4 +1,5 @@
 "use client";
+import { assetPath } from "../../asset-path";
 
 import { useState } from "react";
 import type { Release } from "./releases";
@@ -6,7 +7,7 @@ import type { ProductionLayout } from "../work-navigation";
 
 function Artwork({ entry, priority = false }: { entry: Release; priority?: boolean }) {
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={entry.cover} alt={"Artwork for " + entry.title} width={1000} height={1000} loading={priority ? "eager" : "lazy"} />;
+  return <img src={assetPath(entry.cover)} alt={"Artwork for " + entry.title} width={1000} height={1000} loading={priority ? "eager" : "lazy"} />;
 }
 
 function ListenLink({ entry }: { entry: Release }) {

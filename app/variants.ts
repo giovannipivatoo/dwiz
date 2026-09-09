@@ -5,12 +5,6 @@ export const directions = [
 ] as const;
 
 export type Direction = (typeof directions)[number]["id"];
-export type PageProps = { searchParams: Promise<{ v?: string | string[]; layout?: string | string[] }> };
-
-export async function getDirection(searchParams: PageProps["searchParams"]): Promise<Direction> {
-  const { v } = await searchParams;
-  return v === "editorial" || v === "studio" ? v : "cinema";
-}
 
 export function directionHref(path: string, direction: Direction) {
   return path + "?v=" + direction;

@@ -4,7 +4,7 @@ import { siteConfig, socialImage } from "./site-data";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
+  const requestHeaders = process.env.GITHUB_PAGES === "true" ? new Headers() : await headers();
   const forwardedHost = requestHeaders
     .get("x-forwarded-host")
     ?.split(",")[0]

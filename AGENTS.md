@@ -1,6 +1,6 @@
 # DWIZ project context
 
-Updated: 8 September 2026. This file records the current user decisions; later user instructions take precedence.
+Updated: 9 September 2026. This file records the current user decisions; later user instructions take precedence.
 
 ## Design decisions
 
@@ -46,7 +46,8 @@ The seven entries are **Selected releases**, not a verified stream ranking. The 
 - Listening links open the verified release on Spotify or YouTube. Sync video iframes load only after the user presses Play, using YouTube's privacy-enhanced host.
 - Keep keyboard navigation, visible focus, labelled controls and reduced-motion support. Index preview must work on focus as well as hover; mobile uses visible row artwork.
 - Contact email and social links are not supplied: `siteConfig.email` is null and `socials` is empty. Do not invent contact details or make a form appear to submit successfully.
-- Social preview artwork and its existing alt text are preserved. Metadata and sitemap use the request host; review the legacy fallback `siteConfig.url` when preparing a future deployment/domain change.
-- No Sites publication was performed for this design pass. A Git push is not evidence that the hosted site was updated.
+- Social preview artwork and its existing alt text are preserved. Static metadata, sitemap and robots use `https://giovannipivatoo.github.io/dwiz`; Worker page metadata still uses the request host. Update `siteConfig.url`, the Pages base path and static legacy redirect paths together for domain changes.
+- The user requested GitHub Pages publication on 9 September 2026. `.github/workflows/pages.yml` builds, validates and deploys `out/` on pushes to `main`; `npm run test:pages` validates locally. Wait for deployment success before claiming the hosted site is updated. No Sites publication is requested.
+- Static export uses `/dwiz`, trailing slashes and HTML redirects for legacy URLs. Default static HTML renders Cinema/Sleeves; query-selected layouts activate in the browser through `app/query-parameters.tsx`. Preserve the Worker build and its HTTP redirects.
 
 See [README.md](README.md) for setup, source locations and validation. Keep these context files aligned with later user decisions.

@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Anton";
-  src: url("/fonts/anton.ttf") format("truetype");
+  src: url("../public/fonts/anton.ttf") format("truetype");
   font-style: normal;
   font-weight: 400;
   font-display: swap;

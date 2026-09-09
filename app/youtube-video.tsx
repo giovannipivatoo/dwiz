@@ -1,4 +1,5 @@
 "use client";
+import { assetPath } from "./asset-path";
 
 import { useState } from "react";
 
@@ -20,7 +21,7 @@ export function YouTubeVideo({ videoId, title, outlet, youtubeUrl, poster }: {
         ) : (
           <button className="video-load-button" type="button" onClick={() => setIsLoaded(true)} aria-label={"Play " + title + " on YouTube"}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={poster} alt="" width={1280} height={720} />
+            <img src={assetPath(poster)} alt="" width={1280} height={720} />
             <span className="play-disc" aria-hidden="true">▶</span>
             <span className="video-load-label">Watch film</span>
           </button>

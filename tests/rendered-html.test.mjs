@@ -95,7 +95,9 @@ test("offers the artist-selected releases in all three Production layouts", asyn
     assert.match(html, /7<!-- --> selected releases/);
     assert.ok(html.includes('href="/work?layout=' + layout + '"'));
     assert.ok(html.includes("5wjfeD4eDzX9QZUiGeKJBV"));
-    assert.ok(html.includes("B-f0SSfZKzs"));
+    // Spotlight renders only the selected release's listening URL.
+    if (layout !== "spotlight") assert.ok(html.includes("B-f0SSfZKzs"));
+    else assert.ok(html.includes('aria-label="Feature +TRAP by TIARA'));
     assert.doesNotMatch(html, /TRAP KARTEL UNDERGROUND|40 MOTIVI|cuore bustdown|Top 10|most streamed/);
   }
   const fallback = await (await get("/work/production?layout=unknown")).text();

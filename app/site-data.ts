@@ -21,7 +21,7 @@ export type WorkEntry = {
 export const siteConfig = {
   name: "DWIZ",
   fullName: "Davide Zonta",
-  url: "https://sync-composer-concept.giovannipivatoo.chatgpt.site",
+  url: "https://giovannipivatoo.github.io/dwiz",
   email: null as string | null,
   socials: [] as readonly { readonly label: string; readonly href: string }[],
 };

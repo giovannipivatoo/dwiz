@@ -1,4 +1,5 @@
 "use client";
+import { assetPath } from "./asset-path";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -14,7 +15,7 @@ export function CinemaHero() {
       <div className="cinema-images" aria-hidden="true">
         {publishedWork.map((work, index) => (
           // eslint-disable-next-line @next/next/no-img-element
-          <img key={work.slug} src={work.still} alt="" className={selected === index ? "is-active" : ""} width={1280} height={720} fetchPriority={index === 0 ? "high" : "auto"} />
+          <img key={work.slug} src={assetPath(work.still)} alt="" className={selected === index ? "is-active" : ""} width={1280} height={720} fetchPriority={index === 0 ? "high" : "auto"} />
         ))}
       </div>
       <div className="cinema-intro"><span>Independent producer</span><span>Music for picture</span></div>

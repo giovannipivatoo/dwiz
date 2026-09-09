@@ -1,3 +1,4 @@
+import { assetPath } from "./asset-path";
 import Link from "next/link";
 import type { WorkEntry } from "./site-data";
 import { directions, directionHref, type Direction } from "./variants";
@@ -54,7 +55,7 @@ export function VideoPoster({ entry, priority = false }: { entry: WorkEntry; pri
   return (
     <div className="video-poster">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={entry.still} alt={entry.title + " — " + entry.outlet} width={1280} height={720} loading={priority ? "eager" : "lazy"} />
+      <img src={assetPath(entry.still)} alt={entry.title + " — " + entry.outlet} width={1280} height={720} loading={priority ? "eager" : "lazy"} />
       <span className="poster-action" aria-hidden="true">View project <span>↗</span></span>
     </div>
   );

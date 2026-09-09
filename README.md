@@ -1,6 +1,6 @@
 # DWIZ — Davide Zonta
 
-Portfolio for DWIZ: music for picture and released records featuring his co-production. Built with React 19, Vinext/Vite and the Next.js App Router, targeting OpenAI Sites on Cloudflare Workers.
+Portfolio for DWIZ: music for picture and released records featuring his co-production. Built with React 19, Vinext/Vite and the Next.js App Router, published to GitHub Pages through a Next.js static export. The existing Vinext/Cloudflare Workers build remains available.
 
 Read [AGENTS.md](AGENTS.md) for the approved design direction, content decisions and constraints before changing the site.
 
@@ -16,7 +16,7 @@ Three Production layouts remain available for review; none has been selected as 
 | 02 Index | `/work/production?layout=index` | Discography list with an artwork preview that follows hover and keyboard focus; row thumbnails on mobile |
 | 03 Spotlight | `/work/production?layout=spotlight` | Featured record, previous/next controls and a selector for all seven releases |
 
-The Sync/Production category links retain the Production layout choice. Missing or unknown layout values use Sleeves. Earlier site-wide concepts remain accessible through `?v=editorial` and `?v=studio`; Cinema is the default. Production always uses Cinema.
+Static HTML uses Cinema and Sleeves; URL-selected variants activate when JavaScript loads. The Sync/Production category links retain the Production layout choice. Missing or unknown layout values use Sleeves. Earlier site-wide concepts remain accessible through `?v=editorial` and `?v=studio`; Cinema is the default. Production always uses Cinema.
 
 ## Local development
 
@@ -60,11 +60,25 @@ Other commands:
 | `public/fonts/` | Anton font and its OFL license, used by the Editorial concept |
 | `tests/rendered-html.test.mjs` | Public routes, content, variants, metadata, video loading and legacy redirects |
 
-## Hosting and optional integrations
+## GitHub Pages
+
+Public URL: https://giovannipivatoo.github.io/dwiz/
+
+Every push to `main` runs `.github/workflows/pages.yml`: install locked dependencies, build and test the static export, then deploy `out/` to GitHub Pages. GitHub Pages must use **GitHub Actions** as its publishing source.
+
+```sh
+npm run test:pages
+```
+
+`build:pages` enables `output: export`, `/dwiz` as `basePath`, and trailing slashes. `app/asset-path.ts` prefixes raw image URLs; the CSS build bundles the local font. Page metadata remains server-generated while `page-content.tsx` components read query selections through `app/query-parameters.tsx`. Legacy project addresses use HTML redirects in the static export and HTTP redirects in the Worker.
+
+Metadata uses the public Pages URL for the static export; the Worker still derives page metadata from the request host. Sitemap and robots use `siteConfig.url`. Update that URL, `next.config.ts`, and static legacy redirect paths together if the repository or domain changes. `tsconfig.pages.json` checks the exported app without the optional Cloudflare-only starter helpers.
+
+## Sites and optional integrations
 
 `.openai/hosting.json` associates this checkout with its Sites project. D1 and R2 bindings are currently disabled. The build emits the ESM Worker at `dist/server/index.js` and the packaged hosting manifest at `dist/.openai/hosting.json`. There is no `wrangler.jsonc`.
 
-Git commits and pushes are separate from Sites publication. The Cinema redesign and Production variants were reviewed locally; their publication was not performed during this design pass.
+Git commits and pushes are separate from Sites publication. No Sites deployment was requested or performed; GitHub Pages is the selected publication destination.
 
 The starter retains optional D1/Drizzle examples and `app/chatgpt-auth.ts` helpers. The portfolio currently has no database-backed content or sign-in flow. If sign-in is introduced, use the existing helpers and platform access controls; Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt` and `/callback`.
 
@@ -78,3 +92,10 @@ Dependencies, builds, runtime state, environment files and logs are ignored by G
 - Final checks confirmed seven uniform Co-production credits, no loop distinction, no horizontal overflow and no browser JavaScript errors.
 
 Standalone `tsc --noEmit` still encounters the starter's missing Cloudflare worker type declarations (`cloudflare:workers`, `Fetcher`, `D1Database`); this is separate from the successful build and integration tests.
+
+## Pages validation — 9 September 2026
+
+- Next.js static export and application TypeScript checks passed.
+- Three export tests cover public routes, local assets and navigation under `/dwiz`, release credits, social metadata, font URLs, sitemap, robots and static redirects.
+- All eight Worker integration tests and ESLint for `app` and `tests` passed.
+- Spotlight renders only the selected listening link; its test checks the other releases through their visible selectors.
